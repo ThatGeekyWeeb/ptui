@@ -18,4 +18,4 @@ jobs:
         uses: bridgelightcloud/github-mirror-action@v2
         with:
           origin: https://git.unix.lgbt/Mia/ptui 
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
