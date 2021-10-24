@@ -1,0 +1,21 @@
+----
+# ptui / psh-tui
+- micro-sized tui lib in pure sh
+## Functions
+- hline
+  -- create a line $1 in length using $2/- with $3 indentation
+  -- does NOT create a new line
+- vline
+  -- create a line $1 tall with $2 indentation from $3/| 
+  -- creates new line
+- dvline
+  -- creates 2 lines $1 with $2 indentation from $3/| $3 apart
+  -- creates new line
+- rec 
+  -- makes a fucking rectangle
+  ---- $1 indentation
+  ---- $2 wide (-1)
+  ---- $3 tall (-1)
+  ---- $4/- char to use for top and bottom
+  ---- $5/| char to use for sides
+  ---- $6 disable + corners if 0

@@ -1,0 +1,68 @@
+#!/bin/sh
+# the act of getting the term size is likely to be required
+# with a lot of one can avoid it; but it's best to attempt to use it
+# ---
+# due to POSIX not defining anything to get said term size; only options are bash or stty
+# -- do the following below
+
+# has() { command -V "$1" >/dev/null 2>&1 ; }
+
+#[ "$COLUMNS" -a "$LINES" ] && { # bash sets these to the correct(?) values
+#  : # do nothing for the time being # || { } has been know to cause issues
+#} || {
+#  has stty || { echo 'stty or running with $COLUMNS/$LINES set is required'; exit 1 ;}
+#  IFS=""; SIZE="$(stty size)"; COLUMNS="${SIZE##* }"; LINES="${SIZE%% *}"
+#} 
+
+# leave dynamic bs up to outside devs
+
+# if using mono space all chars should be 1 column
+# LINES is how tall # COLUMNS is how wide # expirence pure pain now
+s() { # s acts as seq replace ment
+  n=$(($1)); while [ "$n" -le $(($2)) ]; do
+    echo "$n"; : $((n+=1))
+  done
+}
+indent() { # indent shifts $1 spaces/columns
+  unset IFS
+  for i in $(s 1 ${1:-${COLUMNS:-80}}); do # print entire line if $1 is not given
+    printf ' '
+  done
+}
+vline() { # create a vertical line $1 tall with $2 as column number to print at with from $3/|
+  unset IFS
+  for i in $(s 1 ${1}); do # $1 is height
+    indent "$2" # $2 is width / kinda
+    printf '%s\n' "${3:-|}" # $3 is to print
+  done
+}
+dvline() { # draw 2 vline's $4 apart
+  unset IFS
+  for i in $(s 1 ${1}); do # $1 is height
+    indent "$2" # $2 is width / kinda
+    printf '%s' "${3:-|}" # $3 is to print
+    indent "${4:-0}"
+    printf '%s\n' "${3:-|}"
+  done
+}
+hline() { # create a line $1 columns from $2/- $3 is indent
+  unset IFS
+  indent "${3:-0}" # indent if set
+  for i in $(s 1 ${1}); do
+    printf '%s' "${2:-}"
+  done
+  #echo
+}
+rec() { # MAKE A FUCKING RECTANGLE # $1 indent $2 wide $3 tall $4 is $2 char $5 is $3 char $6 is 0/1 for corner # corners are enabled by default
+  unset IFS
+  [ "${6:-1}" -eq 0 ] && cor="-"
+  indent "$1"
+  printf '%s' "${cor:-+}" # draw corner
+  hline "$(($2-1))" "${4:--}" "0"; printf '%s' "${cor:-+}" # top bar
+  echo
+  dvline "$3" "$1" "$5" "$(($2-1))"
+  indent "$1"
+  printf '%s' "${cor:-+}" # draw corner
+  hline "$(($2-1))" "${4:--}" "0"; printf '%s' "${cor:-+}" # bottom bar
+  echo
+}
