@@ -51,17 +51,18 @@ vline() { # create a vertical line $1 tall with $2 as column number to print at 
 }
 mvline() { # draw $1 vlines $5 apart with $6 as text $7 lines down afer line $8 $9 indentation
   unset IFS
-  for l in $(s 1 ${1}); do # num of lines # l is current line
-    for i in $(s 1 ${2}); do # length # i is current point in l
-      indent "$3" # $3 is width / kinda
-      printf '%s' "${4:-|}" # $4 is to print
-      [ "$7" -eq "$i" -a "$8" -eq "$l" ] 2>/dev/null && {
+  for i in $(s 1 ${2}); do
+    for l in $(s 1 ${1}); do
+      indent "$3" # $3 is width
+      [ "$l" -le "$1" ] && printf '%s' "${4:-|}" # $3 is to print
+      [ "$8" -eq "$l" -a "$7" -eq "$i" ] 2>/dev/null && {
         indent "${5:-0}" "$6" "${9:-0}"
       } || {
-        indent "${5:-0}" 
+       [ "$l" -lt "$1" ] && indent "${5:-0}"
       }
-      printf '%s\n' "${4:-|}"
+      [ "$l" -gt 1 -a "$l" -lt "$1" ] && printf '%s' "${4:-|}"
     done
+    echo
   done
 }
 # below is likely to be replaced with a function for any number of lines; would be of more use
