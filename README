@@ -3,14 +3,37 @@
 - micro-sized tui lib in pure sh
 ## Functions
 - hline
-  -- create a line $1 in length using $2/- with $3 indentation
+  -- create line
+  ---- $1 length
+  ---- $2/- char to use
+  ---- $3 indentation
+  ---- $4 text to print AROUND
+  ---- $5 indentation before
+  ---- $6 indentation after
   -- does NOT create a new line
 - vline
-  -- create a line $1 tall with $2 indentation from $3/| 
+  -- create vertical line 
+  ---- $1 tall
+  ---- $2 indentation
+  ---- $3/| char to use
+  ---- $4 text to print
+  ---- $5 line to print on
+  ---- $6 indentation before
   -- creates new line
 - dvline
-  -- creates 2 lines $1 with $2 indentation from $3/| $3 apart
+  -- creates 2 lines 
+  ---- $1 tall
+  ---- $2 indentation
+  ---- $3/| char to use 
+  ---- $4 apart
+  ---- $5 text to print AROUND
+  ---- $6 lint to print on
+  ---- $7 indetation before
+  -- indents after based on `$(($2-${#5}-${7:-0})))` 
   -- creates new line
+- mvline
+  -- same as dvline but for $1 lines
+  -- still WIP
 - rec 
   -- makes a fucking rectangle
   ---- $1 indentation

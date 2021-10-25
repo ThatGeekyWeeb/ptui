@@ -23,35 +23,70 @@ s() { # s acts as seq replace ment
     echo "$n"; : $((n+=1))
   done
 }
-indent() { # indent shifts $1 spaces/columns
+indent() { # indent shifts $1/$3 - ${#$2} spaces/columns then prints $2
   unset IFS
-  for i in $(s 1 ${1:-${COLUMNS:-80}}); do # print entire line if $1 is not given
+  sub="${#2}"; [ "$2" ] || sub=0
+  [ "$1" -eq 0 ] && sub=0
+  [ "$3" ] && sub=0
+  for i in $(s 1 $((${3:-$1}-sub))); do # print entire line if $1 is not given
     printf ' '
-  done
+  done; [ "$2" ] && {
+    printf '%s' "$2"
+    for i in $(s 1 $(($1-${#2}-${3:-0}))); do
+      printf ' '
+    done
+  }
 }
-vline() { # create a vertical line $1 tall with $2 as column number to print at with from $3/|
-  unset IFS
-  for i in $(s 1 ${1}); do # $1 is height
-    indent "$2" # $2 is width / kinda
-    printf '%s\n' "${3:-|}" # $3 is to print
-  done
-}
-dvline() { # draw 2 vline's $4 apart
+vline() { # create a vertical line $1 tall with $2 as column number to print at with from $3/| 
+# $4 may be text to print with $5 as how far down to print and $6 as indentation
   unset IFS
   for i in $(s 1 ${1}); do # $1 is height
     indent "$2" # $2 is width / kinda
     printf '%s' "${3:-|}" # $3 is to print
-    indent "${4:-0}"
+    [ "$5" -eq "$i" ] 2>/dev/null && {
+      indent "${6:-0}"; printf '%s' "$4"
+    }
+    echo # newline is required
+  done
+}
+mvline() { # draw $1 vlines $5 apart with $6 as text $7 lines down afer line $8 $9 indentation
+  unset IFS
+  for l in $(s 1 ${1}); do # num of lines # l is current line
+    for i in $(s 1 ${2}); do # length # i is current point in l
+      indent "$3" # $3 is width / kinda
+      printf '%s' "${4:-|}" # $4 is to print
+      [ "$7" -eq "$i" -a "$8" -eq "$l" ] 2>/dev/null && {
+        indent "${5:-0}" "$6" "${9:-0}"
+      } || {
+        indent "${5:-0}" 
+      }
+      printf '%s\n' "${4:-|}"
+    done
+  done
+}
+# below is likely to be replaced with a function for any number of lines; would be of more use
+dvline() { # draw 2 vline's $4 apart with $5 as text $6 lines down $7 indentation
+  unset IFS
+  for i in $(s 1 ${1}); do # $1 is height
+    indent "$2" # $2 is width / kinda
+    printf '%s' "${3:-|}" # $3 is to print
+    [ "$6" -eq "$i" ] 2>/dev/null && {
+      indent "${4:-0}" "$5" "${7:-0}"
+    } || indent "${4:-0}" 
     printf '%s\n' "${3:-|}"
   done
 }
 hline() { # create a line $1 columns from $2/- $3 is indent
+# $4 as text - this will print lines AROUND $4 $5 in with $6 as indentation before $7 after 
   unset IFS
   indent "${3:-0}" # indent if set
   for i in $(s 1 ${1}); do
-    printf '%s' "${2:-}"
+    [ "$5" -eq "$i" ] 2>/dev/null && {
+      indent "${6:-0}"
+      printf '%s' "$4"
+      indent "${7:-0}"
+    } || printf '%s' "${2:-}"
   done
-  #echo
 }
 rec() { # MAKE A FUCKING RECTANGLE # $1 indent $2 wide $3 tall $4 is $2 char $5 is $3 char $6 is 0/1 for corner # corners are enabled by default
   unset IFS
