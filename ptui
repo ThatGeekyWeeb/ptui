@@ -36,7 +36,7 @@ mvline() { # draw $1 vlines $5 apart with $6 as text $7 lines down afer line $8 
   unset IFS
   for mv in $(s 1 ${2}); do
     for l in $(s 1 ${1}); do
-      indent "$3" # $3 is width
+      [ "$l" -eq "1" ] && indent "$3" # $3 is width
       printf '%s' "${4:-|}" # $3 is to print
       [ "$8" -eq "$l" -a "$7" -eq "$mv" ] 2>/dev/null && {
         indent "${5:-0}" "$6" "${9:-0}"
