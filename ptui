@@ -28,11 +28,11 @@ indent() { # indent shifts $1/$3 - ${#$2} spaces/columns then prints $2
   sub="${#2}"; [ "$2" ] || sub=0
   [ "$1" -eq 0 ] && sub=0
   [ "$3" ] && sub=0
-  for i in $(s 1 $((${3:-$1}-sub))); do # print entire line if $1 is not given
+  for id in $(s 1 $((${3:-$1}-sub))); do # print entire line if $1 is not given
     printf ' '
   done; [ "$2" ] && {
     printf '%s' "$2"
-    for i in $(s 1 $(($1-${#2}-${3:-0}))); do
+    for ii in $(s 1 $(($1-${#2}-${3:-0}))); do
       printf ' '
     done
   }
@@ -40,10 +40,10 @@ indent() { # indent shifts $1/$3 - ${#$2} spaces/columns then prints $2
 vline() { # create a vertical line $1 tall with $2 as column number to print at with from $3/| 
 # $4 may be text to print with $5 as how far down to print and $6 as indentation
   unset IFS
-  for i in $(s 1 ${1}); do # $1 is height
+  for v in $(s 1 ${1}); do # $1 is height
     indent "$2" # $2 is width / kinda
     printf '%s' "${3:-|}" # $3 is to print
-    [ "$5" -eq "$i" ] 2>/dev/null && {
+    [ "$5" -eq "$v" ] 2>/dev/null && {
       indent "${6:-0}"; printf '%s' "$4"
     }
     echo # newline is required
@@ -51,16 +51,15 @@ vline() { # create a vertical line $1 tall with $2 as column number to print at 
 }
 mvline() { # draw $1 vlines $5 apart with $6 as text $7 lines down afer line $8 $9 indentation
   unset IFS
-  for i in $(s 1 ${2}); do
+  for mv in $(s 1 ${2}); do
     for l in $(s 1 ${1}); do
       indent "$3" # $3 is width
-      [ "$l" -le "$1" ] && printf '%s' "${4:-|}" # $3 is to print
-      [ "$8" -eq "$l" -a "$7" -eq "$i" ] 2>/dev/null && {
+      printf '%s' "${4:-|}" # $3 is to print
+      [ "$8" -eq "$l" -a "$7" -eq "$mv" ] 2>/dev/null && {
         indent "${5:-0}" "$6" "${9:-0}"
       } || {
-       [ "$l" -lt "$1" ] && indent "${5:-0}"
+       [ "$l" -eq "$1" ] || indent "${5:-0}"
       }
-      [ "$l" -gt 1 -a "$l" -lt "$1" ] && printf '%s' "${4:-|}"
     done
     echo
   done
@@ -102,3 +101,5 @@ rec() { # MAKE A FUCKING RECTANGLE # $1 indent $2 wide $3 tall $4 is $2 char $5 
   hline "$(($2-1))" "${4:--}" "0"; printf '%s' "${cor:-+}" # bottom bar
   echo
 }
+# easy testing
+${1} ${@#$1}

@@ -33,7 +33,17 @@
   -- creates new line
 - mvline
   -- same as dvline but for $1 lines
-  -- still WIP
+  ---- $1 lines
+  ---- $2 tall
+  ---- $3 indentation
+  ---- $4/| char to use
+  ---- $5 apart
+  ---- $6 text to print
+  ---- $7 lines down
+  ---- $8 line to print AFTER
+  ---- $9 indentation before
+  -- indents after based on `$(($2-${#5}-${7:-0})))`
+  -- creates new line
 - rec 
   -- makes a fucking rectangle
   ---- $1 indentation
