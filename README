@@ -42,7 +42,7 @@
   ---- $7 lines down
   ---- $8 line to print AFTER
   ---- $9 indentation before
-  -- indents after based on `$(($2-${#5}-${7:-0})))`
+  -- indents after based on `$(($3-${#6}-${9:-0})))`
   -- creates new line
 - rec 
   -- makes a fucking rectangle
@@ -52,4 +52,9 @@
   ---- $4/- char to use for top and bottom
   ---- $5/| char to use for sides
   ---- $6 disable + corners if 0
+  ---- $7 text to print
+  ---- $8 lines down
+  ---- $9 indentation
+  -- indents after based on `$((${#7}-${9:-0})))`
+  -- creates new line
 

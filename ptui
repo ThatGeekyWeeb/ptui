@@ -1,23 +1,6 @@
 #!/bin/sh
-# the act of getting the term size is likely to be required
-# with a lot of one can avoid it; but it's best to attempt to use it
-# ---
-# due to POSIX not defining anything to get said term size; only options are bash or stty
-# -- do the following below
+# unicode multilength characters are likely to break this -- not my problem lol
 
-# has() { command -V "$1" >/dev/null 2>&1 ; }
-
-#[ "$COLUMNS" -a "$LINES" ] && { # bash sets these to the correct(?) values
-#  : # do nothing for the time being # || { } has been know to cause issues
-#} || {
-#  has stty || { echo 'stty or running with $COLUMNS/$LINES set is required'; exit 1 ;}
-#  IFS=""; SIZE="$(stty size)"; COLUMNS="${SIZE##* }"; LINES="${SIZE%% *}"
-#} 
-
-# leave dynamic bs up to outside devs
-
-# if using mono space all chars should be 1 column
-# LINES is how tall # COLUMNS is how wide # expirence pure pain now
 s() { # s acts as seq replace ment
   n=$(($1)); while [ "$n" -le $(($2)) ]; do
     echo "$n"; : $((n+=1))
@@ -89,17 +72,18 @@ hline() { # create a line $1 columns from $2/- $3 is indent
   done
 }
 rec() { # MAKE A FUCKING RECTANGLE # $1 indent $2 wide $3 tall $4 is $2 char $5 is $3 char $6 is 0/1 for corner # corners are enabled by default
+# $7 as text $8 which line (-2) $9 indentation 
   unset IFS
   [ "${6:-1}" -eq 0 ] && cor="-"
   indent "$1"
   printf '%s' "${cor:-+}" # draw corner
-  hline "$(($2-1))" "${4:--}" "0"; printf '%s' "${cor:-+}" # top bar
+  hline "$2" "${4:--}" "0"; printf '%s' "${cor:-+}" # top bar
   echo
-  dvline "$3" "$1" "$5" "$(($2-1))"
+  dvline "$3" "$1" "$5" "$2" "${7:- }" "${8:-1}" "${9:-0}"
   indent "$1"
   printf '%s' "${cor:-+}" # draw corner
-  hline "$(($2-1))" "${4:--}" "0"; printf '%s' "${cor:-+}" # bottom bar
+  hline "$2" "${4:--}" "0"; printf '%s' "${cor:-+}" # bottom bar
   echo
 }
 # easy testing
-${1} ${@#$1}
+${1} ${@#$1} # this will break text with spaces; for that please source and test
