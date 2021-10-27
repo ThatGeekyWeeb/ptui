@@ -85,5 +85,3 @@ rec() { # MAKE A FUCKING RECTANGLE # $1 indent $2 wide $3 tall $4 is $2 char $5 
   hline "$2" "${4:--}" "0"; printf '%s' "${cor:-+}" # bottom bar
   echo
 }
-# easy testing
-${1} ${@#$1} # this will break text with spaces; for that please source and test
