@@ -1,7 +1,7 @@
 #!/bin/sh
 # unicode multilength characters are likely to break this -- not my problem lol
 
-s() { # s acts as seq replace ment
+s() { # s acts as seq replacement
   n=$(($1)); while [ "$n" -le $(($2)) ]; do
     echo "$n"; : $((n+=1))
   done
